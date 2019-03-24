@@ -1,0 +1,33 @@
+name: mmdetection
+channels:
+  - nempo
+  - loopbio
+  - pkgw-forge
+  - ericmjl
+  - pytorch
+  - conda-forge
+  - hcc
+dependencies:
+  - python=3.6
+  - ffmpeg=4.0.2
+  - gtk2=2.24.31
+  - cudatoolkit=10.0
+  - pytorch=1.0.1
+  - torchvision=0.2.2
+  - coverage=4.5.1
+  - click=6.7
+  - gevent=1.2.2
+  - simplejson=3.11.1
+  - matplotlib=3.0.3
+  - cython=0.29.6
+  - pyyaml=5.1
+  - scipy=1.2.1
+  - packaging=16.8
+  - pycocotools=2.0.0
+  - tensorboardx=1.6
+  - requests=2.21.0
+  - colorama=0.4.1
+  - pip
+  - pip:
+    - argparse-color-formatter==1.2.1
+    - opencv-python==4.0.0.21
