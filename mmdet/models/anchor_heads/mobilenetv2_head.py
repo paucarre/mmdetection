@@ -57,15 +57,16 @@ class MobileNetV2Head(AnchorHead):
         self.cls_convs = nn.ModuleList()
         self.bbox_convs = nn.ModuleList()
         for i in range(self.stacked_convs):
+            in_channels = self.in_channels if i == 0 else self.feat_channels
             self.cls_convs.append(
                 nn.Sequential(
-                    nn.Conv2d(self.feat_channels, self.last_channels, 1, stride=1, padding=0, bias=False),
+                    nn.Conv2d(in_channels, self.last_channels, 1, stride=1, padding=0, bias=False),
                     nn.BatchNorm2d(self.last_channels),
                     self.relu
                 ))
             self.bbox_convs.append(
                 nn.Sequential(
-                    nn.Conv2d(self.feat_channels, self.last_channels, 1, stride=1, padding=0, bias=False),
+                    nn.Conv2d(in_channels, self.last_channels, 1, stride=1, padding=0, bias=False),
                     nn.BatchNorm2d(self.last_channels),
                     self.relu
                 ))
