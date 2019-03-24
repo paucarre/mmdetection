@@ -1,25 +1,38 @@
 # model settings
 input_size = 300
 model = dict(
-    type='MobileNetV2',
+    type='MobileNetV2FPN',
     pretrained=None,
     backbone=dict(
-        type='MobileNetV2'),
+        type='MobileNetV2',
+        input_channel=32,
+        interverted_residual_setting=[
+                                        # t, c, n, s
+                                        [1, 16, 1, 1],
+                                        [6, 24, 2, 2],
+                                        [6, 32, 3, 2],
+                                        [6, 64, 4, 2],
+                                        [6, 96, 3, 1],
+                                        [6, 160, 3, 2],
+                                        [6, 320, 1, 1],
+                                    ],
+        width_mult=1.),
     neck=dict(
         type='FPN',
-        in_channels=[24, 32, 64, 160],
-        out_channels=24,
+        in_channels=[24, 32, 64, 160], # Note: make sure this is consistent with mobilenet channels at the end of their blocks 
+        out_channels=64,
         start_level=1,
         add_extra_convs=True,
         num_outs=4),
     bbox_head=dict(
-        type='RetinaHead',
+        type='MobileNetV2Head',
         num_classes=81,
-        in_channels=24,
+        in_channels=64,
         stacked_convs=4,
-        feat_channels=24,
         octave_base_scale=4,
         scales_per_octave=3,
+        feat_channels=128, # Note: this is significantly lower than the original 1280 to use less memory 
+        width_mult=1.,
         anchor_ratios=[0.5, 1.0, 2.0],
         anchor_strides=[4, 8, 16, 32], # Note: make sure this is consistent with mobilenet block strides 
         target_means=[.0, .0, .0, .0],

@@ -8,7 +8,7 @@ def xavier_init(module, gain=1, bias=0, distribution='normal'):
         nn.init.xavier_uniform_(module.weight, gain=gain)
     else:
         nn.init.xavier_normal_(module.weight, gain=gain)
-    if hasattr(module, 'bias'):
+    if hasattr(module, 'bias') and module.bias is not None:
         nn.init.constant_(module.bias, bias)
 
 
@@ -22,6 +22,17 @@ def uniform_init(module, a=0, b=1, bias=0):
     nn.init.uniform_(module.weight, a, b)
     if hasattr(module, 'bias'):
         nn.init.constant_(module.bias, bias)
+
+
+def xavier_sequential(sequential_module):
+    for layer in sequential_module.modules():
+        if isinstance(layer, nn.Conv2d):
+            xavier_init(layer)
+        elif isinstance(layer, nn.BatchNorm2d):
+            layer.weight.data.fill_(1)
+            layer.bias.data.zero_()
+        elif isinstance(layer, nn.Linear):
+            xavier_init(layer)
 
 
 def kaiming_init(module,

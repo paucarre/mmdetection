@@ -7,11 +7,11 @@ from .faster_rcnn import FasterRCNN
 from .mask_rcnn import MaskRCNN
 from .cascade_rcnn import CascadeRCNN
 from .retinanet import RetinaNet
-from .mobilenetv2 import MobileNetV2
+from .mobilenetv2_fpn import MobileNetV2FPN
 
 __all__ = [
     'BaseDetector', 'SingleStageDetector', 'TwoStageDetector', 'RPN',
     'FastRCNN', 'FasterRCNN', 'MaskRCNN', 'CascadeRCNN', 'RetinaNet',
-    'MobileNetV2'
+    'MobileNetV2FPN'
 
 ]
