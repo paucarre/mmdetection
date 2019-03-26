@@ -70,10 +70,11 @@ class MobileNetV2Head(AnchorHead):
                     nn.BatchNorm2d(self.last_channels),
                     self.relu
                 ))
+        self.mobilenet_cls_conv =  nn.Conv2d( self.last_channels, self.num_anchors * self.cls_out_channels,
+                                3, padding=1)
         self.mobilenet_cls = nn.Sequential(
                     nn.Dropout(0.2),
-                    nn.Conv2d( self.last_channels, self.num_anchors * self.cls_out_channels,
-                                3, padding=1)
+                    self.mobilenet_cls_conv
                 )
         self.mobilenet_bbox = nn.Sequential(
                     nn.Dropout(0.2),
@@ -83,6 +84,8 @@ class MobileNetV2Head(AnchorHead):
 
     def init_weights(self):
         weight_init.xavier_sequential(self)
+        bias_cls = bias_init_with_prob(0.01)
+        normal_init(self.mobilenet_cls_conv, std=0.01, bias=bias_cls)
 
     def forward_single(self, x):
         cls_feat = x
