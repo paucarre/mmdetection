@@ -1,6 +1,5 @@
-name: mmdetection
+name: mmdetection2
 channels:
-  - nempo
   - loopbio
   - pkgw-forge
   - ericmjl

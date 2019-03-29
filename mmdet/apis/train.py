@@ -58,6 +58,15 @@ def train_detector(model,
     else:
         _non_dist_train(model, dataset, cfg, validate=validate)
 
+def register_validation_hooks(runner, model, cfg):
+    if isinstance(model.module, RPN):
+        # TODO: implement recall hooks for other datasets
+        runner.register_hook(CocoDistEvalRecallHook(cfg.data.val))
+    else:
+        if cfg.data.val.type == 'CocoDataset':
+            runner.register_hook(CocoDistEvalmAPHook(cfg.data.val))
+        else:
+            runner.register_hook(DistEvalmAPHook(cfg.data.val))
 
 def _dist_train(model, dataset, cfg, validate=False):
     # prepare data loaders
@@ -80,14 +89,7 @@ def _dist_train(model, dataset, cfg, validate=False):
     runner.register_hook(DistSamplerSeedHook())
     # register eval hooks
     if validate:
-        if isinstance(model.module, RPN):
-            # TODO: implement recall hooks for other datasets
-            runner.register_hook(CocoDistEvalRecallHook(cfg.data.val))
-        else:
-            if cfg.data.val.type == 'CocoDataset':
-                runner.register_hook(CocoDistEvalmAPHook(cfg.data.val))
-            else:
-                runner.register_hook(DistEvalmAPHook(cfg.data.val))
+        register_validation_hooks(runner, model, cfg)
 
     if cfg.resume_from:
         runner.resume(cfg.resume_from)
@@ -113,6 +115,8 @@ def _non_dist_train(model, dataset, cfg, validate=False):
                     cfg.log_level)
     runner.register_training_hooks(cfg.lr_config, cfg.optimizer_config,
                                    cfg.checkpoint_config, cfg.log_config)
+    if validate:
+        register_validation_hooks(runner, model, cfg)
 
     if cfg.resume_from:
         runner.resume(cfg.resume_from)
