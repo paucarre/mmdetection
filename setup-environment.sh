@@ -15,14 +15,12 @@ else
     Linux*)
         echo 'Installing conda for Linux...'
         unset PYTHONPATH
-        # WARNING: do not change URL to latest as in MacOS.
-        # WARNING: a new version might break the build or production services without notice.
-        curl -o ~/miniconda-install.sh https://repo.anaconda.com/miniconda/Miniconda2-4.5.11-Linux-x86_64.sh
+        curl -o ~/miniconda-install.sh https://repo.anaconda.com/miniconda/Miniconda2-latest-Linux-x86_64.sh
         chmod +x ~/miniconda-install.sh
-        ~/miniconda-install.sh -b
+        ~/miniconda-install.sh -b -p $HOME/miniconda2
         rm ~/miniconda-install.sh
         echo ". \$HOME/miniconda2/etc/profile.d/conda.sh" >> ~/.profile
-        . $HOME/.profile        
+        . $HOME/.profile
         ;;
     Darwin*)
         echo 'Installing conda for MacOS...'
@@ -51,9 +49,7 @@ else
    #
    echo -e "Anaconda 'mmdetection' environment not detected.\nInstalling anaconda environment 'mmdetection' together with all the required dependencies..."
    conda update --all -y
-   conda update anaconda-navigator -y
-   conda build purge-all
-   conda env create -f environment.yml
+   conda env create -f environment.yml 
    conda activate mmdetection
    mkdir -p "$CONDA_PREFIX/etc/conda/activate.d"
    #
